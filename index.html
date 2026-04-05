@@ -1235,12 +1235,7 @@ Inicialização do sistema (execução assíncrona)
     // ─────────────────────────────────────────────────────────────
 
     // Carrega config + participants do Supabase pro state em memória
-   async function loadStateFromSupabase() {
-  var { data: cfg, error: cfgErr } = await sb
-    .from('config_public')
-    .select('*')
-    .maybeSingle();
-}
+   
       if (cfgErr) throw new Error('Erro ao carregar config: ' + cfgErr.message);
 
       state.maxSpots         = cfg.max_spots;
@@ -1250,23 +1245,48 @@ Inicialização do sistema (execução assíncrona)
       state.linkReleased     = cfg.link_released;
 
       var { data: parts, error: partsErr } = await sb
-        .from('participants')
-        .select('*')
-        .order('created_at', { ascending: true });
+// ─────────────────────────────────────────────────────────────
+//  SUPABASE — Funções de dados (fetch + RPC)
+// ─────────────────────────────────────────────────────────────
 
-      if (partsErr) throw new Error('Erro ao carregar inscritos: ' + partsErr.message);
+async function loadStateFromSupabase() {
+  const { data, error } = await sb
+    .from('config_public')
+    .select('*')
+    .limit(1);
 
-      state.participants = (parts || []).map(function(p) {
-        return {
-          nome: p.nome,
-          celular: p.celular,
-          nick: p.nick,
-          createdAt: p.created_at
-        };
-      });
+  if (error) throw new Error('Erro ao carregar config: ' + error.message);
 
-      log('State carregado do Supabase', state.participants.length + ' inscrito(s)');
-    }
+  const cfg = data?.[0];
+
+  if (!cfg) {
+    throw new Error('Config não encontrada no banco');
+  }
+
+  state.maxSpots         = cfg.max_spots;
+  state.pixKey           = cfg.pix;
+  state.roomLink         = cfg.link;
+  state.inscriptionValue = cfg.valor;
+  state.linkReleased     = cfg.released;
+
+  const { data: parts, error: partsErr } = await sb
+    .from('participants')
+    .select('*')
+    .order('created_at', { ascending: true });
+
+  if (partsErr) throw new Error('Erro ao carregar inscritos: ' + partsErr.message);
+
+  state.participants = (parts || []).map(function (p) {
+    return {
+      nome: p.nome,
+      celular: p.celular,
+      nick: p.nick,
+      createdAt: p.created_at
+    };
+  });
+
+  log('State carregado do Supabase', state.participants.length + ' inscrito(s)');
+}
 
     // Carrega histórico de jogos do Supabase
     async function loadHistoricoFromSupabase() {
@@ -2298,37 +2318,34 @@ const ADMIN_LOCK_SECONDS = 30;
 //  incluindo vagas, link da sala e configurações.
 // ─────────────────────────────────────────────────────────────
 
-    function setupRealtime() {
-      // Subscribe nas mudanças de participants (INSERT, DELETE)
-      sb.channel('realtime-participants')
-        .on('postgres_changes', {
-          event: '*',
-          schema: 'public',
-          table: 'participants'
-        }, function(payload) {
-          log('Realtime: participants alterado', payload.eventType);
-          refetchAll();
-        })
-        .subscribe(function(status) {
-          log('Realtime participants', status);
-          updateConnectionStatus(status === 'SUBSCRIBED');
-        });
+   function setupRealtime() {
+  sb.channel('realtime-participants')
+    .on('postgres_changes', {
+      event: '*',
+      schema: 'public',
+      table: 'participants'
+    }, function(payload) {
+      log('Realtime: participants alterado', payload.eventType);
+      refetchAll();
+    })
+    .subscribe(function(status) {
+      log('Realtime participants', status);
+      updateConnectionStatus(status === 'SUBSCRIBED');
+    });
 
-      // Subscribe nas mudanças de config (UPDATE)
-      sb.channel('realtime-config')
-        .on('postgres_changes', {
-          event: '*',
-          schema: 'public',
-          table: 'config'
-        }, function(payload) {
-          log('Realtime: config alterado', payload.eventType);
-          refetchAll();
-        })
-        .subscribe(function(status) {
-          log('Realtime config', status);
-        });
-    }
-
+  sb.channel('realtime-config')
+    .on('postgres_changes', {
+      event: '*',
+      schema: 'public',
+      table: 'config_public'   // 🔥 CORRIGIDO AQUI
+    }, function(payload) {
+      log('Realtime: config alterado', payload.eventType);
+      refetchAll();
+    })
+    .subscribe(function(status) {
+      log('Realtime config', status);
+    });
+}
     // Indicador visual de conexão realtime
     function updateConnectionStatus(connected) {
       elConnectionStatus.classList.remove('hidden');
@@ -2349,34 +2366,33 @@ const ADMIN_LOCK_SECONDS = 30;
     // ─────────────────────────────────────────────────────────────
 
     (async function boot() {
-      log('Iniciando sistema | Desenvolvido por Erick Rodrigues');
-      log('Backend: Supabase (' + SUPABASE_URL + ')');
+  log('Iniciando sistema');
 
-      try {
-        await loadStateFromSupabase();
-        await loadHistoricoFromSupabase();
-        render();
-        setupRealtime();
-        log('Sistema pronto — dados na nuvem, realtime ativado');
-      } catch (err) {
-        log('ERRO FATAL no boot', err.message);
-        // Mostra erro no loading overlay
-        elLoadingOverlay.innerHTML =
-          '<i class="fa-solid fa-circle-xmark" style="font-size:40px;color:#ef4444;"></i>' +
-          '<span class="loading-text" style="color:#fca5a5;">Erro ao conectar com o servidor</span>' +
-          '<span class="loading-text" style="font-size:12px;max-width:400px;text-align:center;">' + escapeHtml(err.message) + '</span>' +
-          '<button class="btn small-btn" onclick="location.reload()" style="margin-top:10px;">' +
-            '<i class="fa-solid fa-rotate-right"></i> Tentar novamente</button>';
-        return;
-      }
+  try {
+    await loadStateFromSupabase();
+    await loadHistoricoFromSupabase();
+    render();
+    setupRealtime();
 
-      // Esconde o loading overlay com fade
-      elLoadingOverlay.classList.add('fade-out');
-      setTimeout(function() {
-        elLoadingOverlay.style.display = 'none';
-      }, 500);
-    })();
+    log('Sistema pronto');
+  } catch (err) {
+    log('ERRO FATAL no boot', err.message);
 
+    elLoadingOverlay.innerHTML =
+      '<div style="color:red;font-size:14px;text-align:center;padding:20px;">' +
+      'Erro ao conectar:<br>' +
+      escapeHtml(err.message) +
+      '<br><br><button onclick="location.reload()">Recarregar</button>' +
+      '</div>';
+
+    return;
+  }
+
+  elLoadingOverlay.classList.add('fade-out');
+  setTimeout(() => {
+    elLoadingOverlay.style.display = 'none';
+  }, 500);
+})();
   </script>
 </body>
 </html>
