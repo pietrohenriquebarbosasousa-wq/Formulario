@@ -1297,7 +1297,7 @@ async function loadStateFromSupabase() {
   state.linkReleased     = cfg.released;
 
   const { data: parts, error: partsErr } = await sb
-    .from('participants')
+    .from('players')
     .select('*')
     .order('created_at', { ascending: true });
 
