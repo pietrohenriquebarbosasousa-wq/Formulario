@@ -1,15 +1,200 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Diário Brawl Farm</title>
 
-<link rel="stylesheet" href="style.css">
-
 <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:Poppins;
+background:linear-gradient(180deg,#0d0e1a,#141833);
+color:white;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.title{
+font-family:'Luckiest Guy';
+font-size:40px;
+text-align:center;
+color:#ffd000;
+text-shadow:0 0 25px orange;
+}
+
+.subtitle{
+text-align:center;
+opacity:.6;
+margin-bottom:30px;
+}
+
+/* cards */
+
+.card{
+background:#1c203c;
+padding:20px;
+border-radius:15px;
+margin-bottom:20px;
+box-shadow:0 0 25px rgba(0,0,0,.5);
+}
+
+/* stats */
+
+.stats{
+display:flex;
+gap:10px;
+}
+
+.stat{
+flex:1;
+background:#262b54;
+padding:15px;
+border-radius:10px;
+text-align:center;
+}
+
+/* progress */
+
+.progressBar{
+height:12px;
+background:#2b2f63;
+border-radius:20px;
+margin-top:10px;
+overflow:hidden;
+}
+
+.progress{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#ff7a00,#ffd000);
+transition:.5s;
+}
+
+/* alerta */
+
+.alert{
+background:#4a3a17;
+color:#ffd000;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+text-align:center;
+}
+
+/* inputs */
+
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:8px;
+background:#2b2f63;
+color:white;
+}
+
+/* botão neon */
+
+.neonButton{
+margin-top:12px;
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+font-weight:bold;
+background:linear-gradient(90deg,#ff7a00,#ffd000);
+cursor:pointer;
+color:white;
+box-shadow:0 0 15px orange;
+transition:.3s;
+}
+
+.neonButton:hover{
+transform:scale(1.05);
+box-shadow:0 0 30px orange;
+}
+
+/* lista */
+
+.player{
+background:#262b54;
+padding:12px;
+margin-top:8px;
+border-radius:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+/* ranking */
+
+.rank{
+background:#262b54;
+padding:12px;
+margin-top:8px;
+border-radius:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.gold{
+border:2px solid gold;
+animation:glow 2s infinite alternate;
+}
+
+.silver{
+border:2px solid silver;
+}
+
+.bronze{
+border:2px solid #cd7f32;
+}
+
+@keyframes glow{
+from{box-shadow:0 0 10px gold}
+to{box-shadow:0 0 30px gold}
+}
+
+/* admin */
+
+.adminButton{
+display:block;
+margin:25px auto;
+padding:12px 25px;
+border:none;
+border-radius:25px;
+background:#6c7194;
+color:white;
+cursor:pointer;
+}
+
+.adminPanel{
+display:none;
+}
+
+.adminControls input{
+margin-top:5px;
+}
+
+.statusOpen{
+color:#7CFF9E;
+}
+
+.statusClosed{
+color:#ff7070;
+}
+
+</style>
 
 </head>
 
@@ -17,27 +202,25 @@
 
 <div class="container">
 
-<h1 class="title">🏆 DIARIO BRAWL FARM 🥇</h1>
-<p class="subtitle">campeonato farm diário • inscrições abertas</p>
-
-<!-- STATUS -->
+<div class="title">🏆 DIARIO BRAWL FARM 🥇</div>
+<div class="subtitle">campeonato farm diário • vagas limitadas</div>
 
 <div class="card">
 
 <div class="stats">
 
 <div class="stat">
-<span>Vagas</span>
+VAGAS
 <h2 id="vagas">9</h2>
 </div>
 
 <div class="stat">
-<span>Inscritos</span>
+INSCRITOS
 <h2 id="inscritos">0</h2>
 </div>
 
 <div class="stat">
-<span>Restantes</span>
+RESTANTES
 <h2 id="restantes">9</h2>
 </div>
 
@@ -47,11 +230,11 @@
 <div class="progress" id="progress"></div>
 </div>
 
-<div id="alert"></div>
+<div id="alerta"></div>
+
+<div id="statusInscricao"></div>
 
 </div>
-
-<!-- ENTRAR -->
 
 <div class="card">
 
@@ -64,8 +247,6 @@
 
 </div>
 
-<!-- JOGADORES -->
-
 <div class="card">
 
 <h3>Jogadores inscritos</h3>
@@ -74,40 +255,44 @@
 
 </div>
 
-<!-- RANKING -->
-
 <div class="card">
 
-<h3>Ranking — jogadores mais ativos</h3>
+<h3>Ranking — Jogadores mais ativos</h3>
 
 <div id="ranking"></div>
 
 </div>
 
-<!-- ADMIN -->
-
 <button class="adminButton" onclick="abrirAdmin()">⚙ Área do admin</button>
 
-<div class="adminPanel" id="admin">
+<div class="card adminPanel" id="admin">
 
-<div class="card">
+<h3>🔑 Login do admin</h3>
 
-<h3>🔑 Login admin</h3>
-
-<input id="senhaAdmin" placeholder="Senha do admin">
+<input id="senhaAdmin" placeholder="Digite a senha">
 
 <button class="neonButton" onclick="loginAdmin()">Entrar como admin</button>
 
-</div>
-
 <div id="adminArea" style="display:none">
-
-<div class="card">
 
 <h3>Painel admin</h3>
 
-<button onclick="limpar()">Limpar lista</button>
-<button onclick="resetRanking()">Resetar ranking</button>
+<div class="adminControls">
+
+<label>Quantidade de vagas:</label>
+<input id="novaVagas" type="number">
+
+<button class="neonButton" onclick="alterarVagas()">Atualizar vagas</button>
+
+<button class="neonButton" onclick="toggleInscricao()">Abrir / Fechar inscrições</button>
+
+<button class="neonButton" onclick="limpar()">Limpar lista</button>
+
+<button class="neonButton" onclick="resetRanking()">Resetar ranking</button>
+
+</div>
+
+<h4>Gerenciar jogadores</h4>
 
 <div id="adminLista"></div>
 
@@ -117,9 +302,237 @@
 
 </div>
 
-</div>
+<script>
 
-<script src="script.js"></script>
+let vagasTotal=localStorage.getItem("vagasTotal")||9
+let inscricoesAbertas=localStorage.getItem("inscricoes")||"true"
+
+let jogadores=JSON.parse(localStorage.getItem("jogadores"))||[]
+let ranking=JSON.parse(localStorage.getItem("ranking"))||{}
+
+let inscritoLocal=localStorage.getItem("jaInscrito")
+
+function salvar(){
+
+localStorage.setItem("jogadores",JSON.stringify(jogadores))
+localStorage.setItem("ranking",JSON.stringify(ranking))
+localStorage.setItem("vagasTotal",vagasTotal)
+localStorage.setItem("inscricoes",inscricoesAbertas)
+
+}
+
+function atualizar(){
+
+let inscritos=jogadores.length
+let restantes=vagasTotal-inscritos
+
+document.getElementById("vagas").innerText=vagasTotal
+document.getElementById("inscritos").innerText=inscritos
+document.getElementById("restantes").innerText=restantes
+
+let percent=(inscritos/vagasTotal)*100
+document.getElementById("progress").style.width=percent+"%"
+
+let alerta=document.getElementById("alerta")
+
+if(restantes<=3 && restantes>0){
+
+alerta.innerHTML="<div class='alert'>⚠ Quase cheio — Restam "+restantes+" vagas</div>"
+
+}else{
+
+alerta.innerHTML=""
+
+}
+
+let status=document.getElementById("statusInscricao")
+
+if(inscricoesAbertas=="true"){
+
+status.innerHTML="<p class='statusOpen'>✔ Inscrições abertas</p>"
+
+}else{
+
+status.innerHTML="<p class='statusClosed'>✖ Inscrições fechadas</p>"
+
+}
+
+let lista=document.getElementById("lista")
+lista.innerHTML=""
+
+jogadores.forEach((j,i)=>{
+
+let div=document.createElement("div")
+div.className="player"
+div.innerHTML=`${i+1}º ${j.nome}`
+
+lista.appendChild(div)
+
+})
+
+let r=document.getElementById("ranking")
+r.innerHTML=""
+
+let sorted=Object.entries(ranking).sort((a,b)=>b[1]-a[1])
+
+sorted.forEach((p,i)=>{
+
+let medalha=""
+let classe="rank"
+
+if(i==0){ medalha="🥇"; classe+=" gold"}
+if(i==1){ medalha="🥈"; classe+=" silver"}
+if(i==2){ medalha="🥉"; classe+=" bronze"}
+
+let div=document.createElement("div")
+div.className=classe
+div.innerHTML=`${medalha} ${p[0]} <span>${p[1]} partidas</span>`
+
+r.appendChild(div)
+
+})
+
+adminLista()
+
+}
+
+function entrar(){
+
+if(inscricoesAbertas!="true"){
+
+alert("Inscrições fechadas")
+return
+
+}
+
+if(inscritoLocal){
+
+alert("Você já se inscreveu")
+return
+
+}
+
+let nome=document.getElementById("nome").value
+
+if(!nome)return
+
+if(jogadores.length>=vagasTotal){
+
+alert("Sem vagas")
+return
+
+}
+
+jogadores.push({nome})
+
+ranking[nome]=(ranking[nome]||0)+1
+
+localStorage.setItem("jaInscrito","true")
+
+salvar()
+
+atualizar()
+
+}
+
+function abrirAdmin(){
+
+document.getElementById("admin").style.display="block"
+
+}
+
+function loginAdmin(){
+
+let senha=document.getElementById("senhaAdmin").value
+
+if(senha=="ph2011jesus"){
+
+document.getElementById("adminArea").style.display="block"
+
+}else{
+
+alert("senha incorreta")
+
+}
+
+}
+
+function alterarVagas(){
+
+let v=document.getElementById("novaVagas").value
+
+if(v>0){
+
+vagasTotal=v
+
+salvar()
+
+atualizar()
+
+}
+
+}
+
+function toggleInscricao(){
+
+inscricoesAbertas = inscricoesAbertas=="true"?"false":"true"
+
+salvar()
+
+atualizar()
+
+}
+
+function limpar(){
+
+jogadores=[]
+localStorage.removeItem("jaInscrito")
+
+salvar()
+
+atualizar()
+
+}
+
+function resetRanking(){
+
+ranking={}
+salvar()
+atualizar()
+
+}
+
+function adminLista(){
+
+let a=document.getElementById("adminLista")
+if(!a)return
+
+a.innerHTML=""
+
+jogadores.forEach((j,i)=>{
+
+let div=document.createElement("div")
+div.className="player"
+
+div.innerHTML=`${j.nome} <button onclick="remover(${i})">❌</button>`
+
+a.appendChild(div)
+
+})
+
+}
+
+function remover(i){
+
+jogadores.splice(i,1)
+salvar()
+atualizar()
+
+}
+
+atualizar()
+
+</script>
 
 </body>
 </html>
