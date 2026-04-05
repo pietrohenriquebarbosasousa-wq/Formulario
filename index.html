@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>🏆 Diario Brawl Farm</title>
+<title>🏆 DIARIO BRAWL FARM</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -12,10 +13,63 @@
 
 body{
 margin:0;
-background:#0c0f1a;
 font-family:Poppins;
+background:#0b0e18;
 color:white;
+overflow-x:hidden;
 }
+
+/* LOADING */
+
+#loading{
+position:fixed;
+width:100%;
+height:100%;
+background:#0b0e18;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.loader{
+border:6px solid #222;
+border-top:6px solid orange;
+border-radius:50%;
+width:60px;
+height:60px;
+animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg)}
+100%{transform:rotate(360deg)}
+}
+
+/* STATUS */
+
+.status{
+position:fixed;
+top:10px;
+right:10px;
+background:#14182c;
+padding:8px 14px;
+border-radius:20px;
+font-size:13px;
+}
+
+.dot{
+width:10px;
+height:10px;
+background:#00ff9c;
+display:inline-block;
+border-radius:50%;
+margin-right:6px;
+box-shadow:0 0 10px #00ff9c;
+}
+
+/* LAYOUT */
 
 .container{
 max-width:900px;
@@ -25,34 +79,34 @@ padding:20px;
 
 .title{
 font-family:'Luckiest Guy';
-font-size:42px;
+font-size:40px;
 text-align:center;
 color:#ffd54a;
-text-shadow:0 0 15px orange;
+text-shadow:0 0 20px orange;
 }
 
 .subtitle{
 text-align:center;
 opacity:.7;
-margin-bottom:30px;
+margin-bottom:25px;
 }
 
 .card{
-background:#1a1f33;
+background:#14182c;
 padding:20px;
 border-radius:15px;
 margin-bottom:20px;
+box-shadow:0 0 20px rgba(255,170,0,.2);
 }
 
 input{
 width:100%;
 padding:14px;
-border-radius:10px;
+margin-top:10px;
 border:none;
+border-radius:10px;
 background:#0f1322;
 color:white;
-margin-top:10px;
-margin-bottom:10px;
 }
 
 button{
@@ -63,86 +117,87 @@ border-radius:10px;
 background:linear-gradient(90deg,#ff9800,#ffd54a);
 font-weight:600;
 cursor:pointer;
+box-shadow:0 0 10px orange;
 }
 
-.status{
-position:fixed;
-top:10px;
-right:10px;
-background:#12172b;
-padding:8px 15px;
-border-radius:20px;
-font-size:14px;
+button:hover{
+transform:scale(1.02);
 }
 
-.green{
-width:10px;
-height:10px;
-background:#00ff9c;
-display:inline-block;
-border-radius:50%;
-margin-right:6px;
-box-shadow:0 0 10px #00ff9c;
-}
+/* RANKING */
 
-.rank-item{
+.rank{
 display:flex;
 justify-content:space-between;
-background:#12172b;
-padding:14px;
-margin-bottom:10px;
+background:#10152a;
+padding:12px;
 border-radius:10px;
+margin-bottom:10px;
 }
 
 .first{
 background:linear-gradient(90deg,#ff9800,#ffd54a);
 color:black;
-font-weight:700;
+font-weight:bold;
+box-shadow:0 0 15px gold;
 }
 
-.notification{
+/* PIX SCREEN */
+
+.pixScreen{
 position:fixed;
-bottom:20px;
-right:20px;
-background:#1c223b;
-padding:15px;
-border-radius:10px;
-display:none;
+bottom:-100%;
+left:0;
+width:100%;
+height:100%;
+background:#0b0e18;
+padding:30px;
+transition:1s;
+overflow:auto;
 }
 
-.payment{
-display:none;
+.pixScreen.show{
+bottom:0;
 }
 
-.success{
-background:#1f3f2a;
-padding:15px;
-border-radius:10px;
-margin-bottom:20px;
+.pixBox{
+background:#14182c;
+padding:25px;
+border-radius:15px;
+text-align:center;
+box-shadow:0 0 20px rgba(255,200,0,.4);
 }
 
-.warning{
-background:#4a3b15;
-padding:15px;
-border-radius:10px;
-margin-bottom:20px;
-}
-
-.pixkey{
+.pixKey{
 background:#0f1322;
 padding:15px;
 border-radius:10px;
-font-family:monospace;
+margin:15px 0;
 letter-spacing:3px;
 }
 
-.lock{
-background:#2c1621;
-padding:15px;
-border-radius:10px;
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
 }
 
-.admin-panel{
+td,th{
+padding:10px;
+border-bottom:1px solid #333;
+text-align:left;
+}
+
+/* NOTIFICATION */
+
+#notify{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#1b213f;
+padding:15px;
+border-radius:10px;
 display:none;
 }
 
@@ -151,73 +206,56 @@ display:none;
 
 <body>
 
+<div id="loading">
+<div class="loader"></div>
+<p>Conectando ao sistema...</p>
+</div>
+
 <div class="status">
-<span class="green"></span> Conectado
+<span class="dot"></span> Conectado
 </div>
 
 <div class="container">
 
-<div class="title">🏆 DIARIO BRAWL FARM 🥇</div>
+<div class="title">🏆DIARIO BRAWL FARM🥇</div>
 <div class="subtitle">campeonato diário • vagas limitadas</div>
 
-<div id="inscricao" class="card">
+<div class="card">
 
-<h2>Entrar</h2>
+<h3>Inscrição</h3>
 
-<input id="nome" placeholder="Seu nome completo">
-<input id="numero" placeholder="Seu celular (somente números)">
-<input id="nick" placeholder="Nick do Brawl Stars">
+<input id="nome" placeholder="Seu nome">
+
+<input id="numero" placeholder="Seu número">
+
+<input id="nick" placeholder="Nick do Brawl Stars" style="display:none">
 
 <button onclick="inscrever()">Entrar</button>
 
 </div>
 
-
 <div class="card">
 
-<h2>Ranking</h2>
+<h3>Ranking</h3>
 
 <div id="ranking"></div>
 
 </div>
 
+<div class="card">
 
-<div id="pagamento" class="card payment">
+<h3>Inscritos</h3>
 
-<div class="success">
-✔ Vaga garantida! <br>
-Sua inscrição foi feita com sucesso!
-</div>
+<table id="tabela">
 
-<div class="card" style="text-align:center">
+<tr>
+<th>Nick</th>
+<th>Partidas</th>
+</tr>
 
-<div style="opacity:.6">VALOR DA INSCRIÇÃO</div>
-<h1 id="valorPix">R$ 5,00</h1>
-
-</div>
-
-<div class="warning">
-⏰ Faça o pagamento via Pix abaixo e aguarde o admin liberar o link da sala.
-</div>
-
-<h3>Chave Pix</h3>
-
-<div class="pixkey">
-98981980358
-</div>
-
-<br>
-
-<button onclick="copiarPix()">Copiar chave Pix</button>
-
-<br><br>
-
-<div id="linkSala" class="lock">
-🔒 Link da sala ainda não liberado
-</div>
+</table>
 
 </div>
-
 
 <div class="card">
 
@@ -225,59 +263,51 @@ Sua inscrição foi feita com sucesso!
 
 </div>
 
+</div>
 
-<div id="admin" class="card admin-panel">
+<div class="pixScreen" id="pixScreen">
 
-<h2>Área do Admin</h2>
+<div class="pixBox">
 
-<input id="senhaAdmin" placeholder="Senha">
+<h2>✔ Vaga garantida!</h2>
 
-<button onclick="loginAdmin()">Entrar</button>
+<p>Valor da inscrição</p>
 
-<div id="painelAdmin" style="display:none">
+<h1 id="valor">R$5,00</h1>
 
-<h3>Valor da inscrição</h3>
+<p>Chave Pix</p>
 
-<input id="valorInput">
+<div class="pixKey" id="pixKey">98981980358</div>
 
-<button onclick="alterarValor()">Atualizar valor</button>
+<button onclick="copiarPix()">Copiar chave Pix</button>
 
-<h3>Liberar link da sala</h3>
-
-<input id="linkInput">
-
-<button onclick="liberarSala()">Liberar</button>
-
-<h3>Gerenciar jogadores</h3>
-
-<button onclick="limpar()">Limpar lista</button>
+<p id="salaStatus">🔒 Link da sala ainda não liberado</p>
 
 </div>
 
 </div>
 
-</div>
-
-<div id="notificacao" class="notification"></div>
+<div id="notify"></div>
 
 <script>
 
-let jogadores = JSON.parse(localStorage.getItem("jogadores")||"[]")
-let valor = localStorage.getItem("valor")||5
-let linkSala = localStorage.getItem("linkSala")||""
+setTimeout(()=>{
+document.getElementById("loading").style.display="none"
+},2000)
 
-document.getElementById("valorPix").innerText="R$ "+valor+",00"
+let jogadores=JSON.parse(localStorage.getItem("jogadores")||"[]")
+
+let nome=document.getElementById("nome")
+let numero=document.getElementById("numero")
+let nick=document.getElementById("nick")
+
+nome.oninput=numero.oninput=()=>{
+if(nome.value && numero.value){
+nick.style.display="block"
+}
+}
 
 function inscrever(){
-
-let nome=document.getElementById("nome").value
-let numero=document.getElementById("numero").value
-let nick=document.getElementById("nick").value
-
-if(!nome||!numero||!nick){
-alert("Preencha todos os campos")
-return
-}
 
 if(localStorage.getItem("inscrito")){
 alert("Você já se inscreveu")
@@ -285,7 +315,7 @@ return
 }
 
 let player={
-nick:nick,
+nick:nick.value,
 partidas:Math.floor(Math.random()*10)
 }
 
@@ -294,48 +324,51 @@ jogadores.push(player)
 localStorage.setItem("jogadores",JSON.stringify(jogadores))
 localStorage.setItem("inscrito",true)
 
-mostrarPagamento()
+document.getElementById("pixScreen").classList.add("show")
 
-notificar("🎮 "+nick+" entrou no campeonato!")
+notificar("🎮 "+player.nick+" entrou no campeonato!")
 
-atualizarRanking()
-
-}
-
-function mostrarPagamento(){
-
-document.getElementById("inscricao").style.display="none"
-document.getElementById("pagamento").style.display="block"
+render()
 
 }
 
-function atualizarRanking(){
+function render(){
 
 jogadores.sort((a,b)=>b.partidas-a.partidas)
 
-let html=""
+let ranking=""
+let tabela=""
 
 jogadores.forEach((p,i)=>{
 
 let pos=i+1
-let classe="rank-item"
 
-if(pos==1) classe+=" first"
+let cls="rank"
 
-html+=`
-<div class="${classe}">
-<div>${pos}º ${p.nick} 🎮</div>
-<div>${p.partidas} partidas</div>
+if(pos==1) cls+=" first"
+
+ranking+=`
+<div class="${cls}">
+<span>${pos}º ${p.nick}</span>
+<span>${p.partidas} partidas</span>
 </div>
+`
+
+tabela+=`
+<tr>
+<td>${p.nick}</td>
+<td>${p.partidas}</td>
+</tr>
 `
 
 })
 
-document.getElementById("ranking").innerHTML=html
+document.getElementById("ranking").innerHTML=ranking
+document.getElementById("tabela").innerHTML+=tabela
 
 }
 
-atualizarRanking()
+render()
 
 function copiarPix(){
 
@@ -347,14 +380,15 @@ notificar("Pix copiado!")
 
 function notificar(msg){
 
-let box=document.getElementById("notificacao")
+let n=document.getElementById("notify")
 
-box.innerText=msg
-box.style.display="block"
+n.innerText=msg
+
+n.style.display="block"
 
 setTimeout(()=>{
 
-box.style.display="none"
+n.style.display="none"
 
 },3000)
 
@@ -362,53 +396,13 @@ box.style.display="none"
 
 function abrirAdmin(){
 
-document.getElementById("admin").style.display="block"
-
-}
-
-function loginAdmin(){
-
-let senha=document.getElementById("senhaAdmin").value
+let senha=prompt("Senha admin")
 
 if(senha==="ph2011jesus"){
 
-document.getElementById("painelAdmin").style.display="block"
+alert("Admin logado")
 
 }
-
-}
-
-function alterarValor(){
-
-let v=document.getElementById("valorInput").value
-
-localStorage.setItem("valor",v)
-
-alert("Valor atualizado")
-
-location.reload()
-
-}
-
-function liberarSala(){
-
-let link=document.getElementById("linkInput").value
-
-localStorage.setItem("linkSala",link)
-
-alert("Link liberado")
-
-location.reload()
-
-}
-
-function limpar(){
-
-localStorage.clear()
-
-alert("Lista limpa")
-
-location.reload()
 
 }
 
