@@ -6,15 +6,15 @@
 
 <style>
 body {
-  background: #0d0d0d;
+  background: #000;
   color: white;
   font-family: Arial;
   text-align: center;
 }
 
 h1 {
-  color: #ff9900;
-  text-shadow: 0 0 10px #ff9900;
+  color: orange;
+  text-shadow: 0 0 15px orange;
 }
 
 .box {
@@ -22,7 +22,7 @@ h1 {
   padding: 20px;
   border-radius: 15px;
   margin: 20px;
-  box-shadow: 0 0 15px #ff9900;
+  box-shadow: 0 0 20px orange;
 }
 
 input {
@@ -34,28 +34,31 @@ input {
 
 button {
   background: #00ff88;
-  color: black;
   padding: 10px;
   border: none;
   border-radius: 8px;
-  margin-top: 10px;
   cursor: pointer;
   box-shadow: 0 0 10px #00ff88;
 }
 
-table {
+.progress {
   width: 100%;
-  margin-top: 20px;
-  border-collapse: collapse;
-}
-
-th, td {
-  border: 1px solid #333;
-  padding: 10px;
-}
-
-th {
+  height: 20px;
   background: #222;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.bar {
+  height: 100%;
+  width: 0%;
+  background: #00ff88;
+  border-radius: 10px;
+}
+
+.admin-box {
+  background: linear-gradient(to bottom, #ccc, #222);
+  box-shadow: 0 0 15px #aaa;
 }
 
 .admin {
@@ -70,82 +73,98 @@ th {
 <h1>🔥 Diário Brawl 🔥</h1>
 
 <div class="box">
-  <p>💰 Inscrição: R$5</p>
-  <p>💀 Kill: R$3</p>
-  <p>🏆 Vitória: R$10</p>
+  <p id="contador">0/9 jogadores</p>
+  <div class="progress"><div class="bar" id="bar"></div></div>
 
   <h3>Inscreva-se</h3>
-
-  <input type="text" id="telefone" placeholder="Número de telefone">
+  <input id="tel" placeholder="Telefone">
   <br>
-  <input type="text" id="nick" placeholder="Nick do Brawl Stars">
+  <input id="nick" placeholder="Nick do Brawl">
   <br>
   <button onclick="inscrever()">Participar</button>
 </div>
 
 <div class="box">
   <h3>👥 Inscritos</h3>
-  <table>
+  <table style="width:100%">
     <thead>
-      <tr>
-        <th>Telefone</th>
-        <th>Nick</th>
-      </tr>
+      <tr><th>Telefone</th><th>Nick</th></tr>
     </thead>
-    <tbody id="tabela"></tbody>
+    <tbody id="lista"></tbody>
   </table>
 </div>
 
-<div class="box">
-  <h3>🔒 Área ADM</h3>
-  <input type="password" id="codigo" placeholder="Digite o código">
-  <button onclick="entrarADM()">Entrar</button>
+<div class="box admin-box">
+  <h3>⚙️ Área do Admin</h3>
+  <input id="codigo" placeholder="Código">
+  <button onclick="login()">Entrar</button>
 
-  <div id="painelADM" class="admin">
-    <h4>Painel do Admin</h4>
-    <button onclick="limpar()">Limpar inscritos</button>
+  <div id="painel" class="admin">
+    <button onclick="limpar()">Limpar lista</button>
   </div>
 </div>
 
-<script>
-let lista = [];
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-function inscrever() {
-  let tel = document.getElementById("telefone").value;
+const firebaseConfig = {
+  apiKey: "AIzaSyDojDC2JgaKjEEVnpZwfISWiUI7JevhzV8",
+  authDomain: "diario-brawl-87d1c.firebaseapp.com",
+  projectId: "diario-brawl-87d1c",
+  storageBucket: "diario-brawl-87d1c.firebasestorage.app",
+  messagingSenderId: "518573443166",
+  appId: "1:518573443166:web:6532683506fb98398bcccf"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const max = 9;
+
+async function carregar() {
+  const querySnapshot = await getDocs(collection(db, "players"));
+  let lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  let count = 0;
+
+  querySnapshot.forEach((docSnap) => {
+    let d = docSnap.data();
+    lista.innerHTML += `<tr><td>${d.tel}</td><td>${d.nick}</td></tr>`;
+    count++;
+  });
+
+  document.getElementById("contador").innerText = count + "/" + max + " jogadores";
+  document.getElementById("bar").style.width = (count/max)*100 + "%";
+}
+
+window.inscrever = async function() {
+  let tel = document.getElementById("tel").value;
   let nick = document.getElementById("nick").value;
 
-  if(tel === "" || nick === "") {
-    alert("Preencha tudo!");
-    return;
-  }
+  if(!tel || !nick) return alert("Preencha tudo!");
 
-  lista.push({tel, nick});
-  atualizar();
+  await addDoc(collection(db, "players"), { tel, nick });
+
+  carregar();
 }
 
-function atualizar() {
-  let tabela = document.getElementById("tabela");
-  tabela.innerHTML = "";
+window.login = function() {
+  if(document.getElementById("codigo").value === "ph2011jesus") {
+    document.getElementById("painel").style.display = "block";
+  }
+}
 
-  lista.forEach(p => {
-    tabela.innerHTML += `<tr><td>${p.tel}</td><td>${p.nick}</td></tr>`;
+window.limpar = async function() {
+  const querySnapshot = await getDocs(collection(db, "players"));
+  querySnapshot.forEach(async (d) => {
+    await deleteDoc(doc(db, "players", d.id));
   });
+  carregar();
 }
 
-function entrarADM() {
-  let codigo = document.getElementById("codigo").value;
-
-  if(codigo === "ph2011jesus") {
-    document.getElementById("painelADM").style.display = "block";
-  } else {
-    alert("Código errado!");
-  }
-}
-
-function limpar() {
-  lista = [];
-  atualizar();
-}
+carregar();
 </script>
 
 </body>
