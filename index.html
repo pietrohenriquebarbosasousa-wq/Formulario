@@ -1,145 +1,70 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Diário Brawl Pro</title>
+<title>Diário Brawl Farm</title>
 
-<style>
+<link rel="stylesheet" href="style.css">
 
-body{
-font-family: Arial;
-background:#0f1221;
-color:white;
-margin:0;
-padding:20px;
-}
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
-.container{
-max-width:800px;
-margin:auto;
-}
-
-.card{
-background:#1b1f35;
-border-radius:12px;
-padding:20px;
-margin-bottom:20px;
-box-shadow:0 0 10px rgba(0,0,0,0.4);
-}
-
-h1{
-text-align:center;
-cursor:pointer;
-}
-
-.stats{
-display:flex;
-justify-content:space-between;
-gap:10px;
-margin-bottom:15px;
-}
-
-.stat{
-background:#252a46;
-padding:15px;
-flex:1;
-border-radius:8px;
-text-align:center;
-}
-
-button{
-background:linear-gradient(90deg,#5b6cff,#b34dff);
-border:none;
-padding:12px;
-border-radius:8px;
-color:white;
-cursor:pointer;
-width:100%;
-font-size:16px;
-}
-
-input{
-width:100%;
-padding:10px;
-margin-top:10px;
-border-radius:6px;
-border:none;
-background:#2a2f50;
-color:white;
-}
-
-.player{
-background:#252a46;
-padding:10px;
-margin-top:5px;
-border-radius:6px;
-display:flex;
-justify-content:space-between;
-}
-
-.rank{
-background:#252a46;
-padding:10px;
-margin-top:6px;
-border-radius:6px;
-display:flex;
-justify-content:space-between;
-}
-
-.adminPanel{
-display:none;
-}
-
-.adminBtn{
-background:red;
-margin-top:5px;
-}
-
-</style>
 </head>
 
 <body>
 
 <div class="container">
 
-<h1 onclick="adminClick()">🏆 DIÁRIO BRAWL PRO</h1>
+<h1 class="title">🏆 DIARIO BRAWL FARM 🥇</h1>
+<p class="subtitle">campeonato farm diário • inscrições abertas</p>
+
+<!-- STATUS -->
 
 <div class="card">
 
 <div class="stats">
-<div class="stat">
-<div>VAGAS</div>
-<div id="vagas">9</div>
-</div>
 
 <div class="stat">
-<div>INSCRITOS</div>
-<div id="inscritos">0</div>
+<span>Vagas</span>
+<h2 id="vagas">9</h2>
 </div>
 
 <div class="stat">
-<div>RESTANTES</div>
-<div id="restantes">9</div>
+<span>Inscritos</span>
+<h2 id="inscritos">0</h2>
 </div>
+
+<div class="stat">
+<span>Restantes</span>
+<h2 id="restantes">9</h2>
 </div>
 
 </div>
 
+<div class="progressBar">
+<div class="progress" id="progress"></div>
+</div>
+
+<div id="alert"></div>
+
+</div>
+
+<!-- ENTRAR -->
 
 <div class="card">
 
-<h3>Entrar</h3>
+<h3>Entrar no campeonato</h3>
 
 <input id="nome" placeholder="Seu nome">
+<input id="celular" placeholder="Seu celular">
 
-<input id="celular" placeholder="Celular">
-
-<button onclick="entrar()">Entrar</button>
+<button class="neonButton" onclick="entrar()">Entrar</button>
 
 </div>
 
+<!-- JOGADORES -->
 
 <div class="card">
 
@@ -149,23 +74,40 @@ margin-top:5px;
 
 </div>
 
+<!-- RANKING -->
 
 <div class="card">
 
-<h3>Ranking — Jogadores mais ativos</h3>
+<h3>Ranking — jogadores mais ativos</h3>
 
 <div id="ranking"></div>
 
 </div>
 
+<!-- ADMIN -->
 
-<div class="card adminPanel" id="admin">
+<button class="adminButton" onclick="abrirAdmin()">⚙ Área do admin</button>
 
-<h3>🔑 ADMIN</h3>
+<div class="adminPanel" id="admin">
 
-<button class="adminBtn" onclick="limpar()">Limpar Lista</button>
+<div class="card">
 
-<button class="adminBtn" onclick="resetarRanking()">Resetar Ranking</button>
+<h3>🔑 Login admin</h3>
+
+<input id="senhaAdmin" placeholder="Senha do admin">
+
+<button class="neonButton" onclick="loginAdmin()">Entrar como admin</button>
+
+</div>
+
+<div id="adminArea" style="display:none">
+
+<div class="card">
+
+<h3>Painel admin</h3>
+
+<button onclick="limpar()">Limpar lista</button>
+<button onclick="resetRanking()">Resetar ranking</button>
 
 <div id="adminLista"></div>
 
@@ -173,167 +115,11 @@ margin-top:5px;
 
 </div>
 
+</div>
 
-<script>
+</div>
 
-let vagasTotal = 9
-
-let jogadores = JSON.parse(localStorage.getItem("jogadores")) || []
-let ranking = JSON.parse(localStorage.getItem("ranking")) || {}
-
-function salvar(){
-localStorage.setItem("jogadores",JSON.stringify(jogadores))
-localStorage.setItem("ranking",JSON.stringify(ranking))
-}
-
-function atualizar(){
-
-document.getElementById("inscritos").innerText = jogadores.length
-document.getElementById("restantes").innerText = vagasTotal - jogadores.length
-
-let lista = document.getElementById("lista")
-lista.innerHTML=""
-
-jogadores.forEach((j,i)=>{
-
-let div=document.createElement("div")
-div.className="player"
-div.innerHTML=`${i+1}º ${j.nome}`
-
-lista.appendChild(div)
-
-})
-
-let r = document.getElementById("ranking")
-r.innerHTML=""
-
-let sorted = Object.entries(ranking).sort((a,b)=>b[1]-a[1])
-
-sorted.forEach((p,i)=>{
-
-let div=document.createElement("div")
-div.className="rank"
-div.innerHTML=`${i+1}º ${p[0]} <span>${p[1]} partidas</span>`
-
-r.appendChild(div)
-
-})
-
-adminLista()
-
-}
-
-function entrar(){
-
-let nome = document.getElementById("nome").value
-let celular = document.getElementById("celular").value
-
-if(!nome) return
-
-if(jogadores.length>=vagasTotal){
-alert("Sem vagas")
-return
-}
-
-jogadores.push({nome,celular})
-
-if(!ranking[nome]) ranking[nome]=0
-
-ranking[nome]++
-
-salvar()
-
-atualizar()
-
-}
-
-function limpar(){
-
-if(confirm("Limpar lista?")){
-
-jogadores=[]
-salvar()
-atualizar()
-
-}
-
-}
-
-function resetarRanking(){
-
-if(confirm("Resetar ranking?")){
-
-ranking={}
-salvar()
-atualizar()
-
-}
-
-}
-
-function remover(index){
-
-jogadores.splice(index,1)
-
-salvar()
-
-atualizar()
-
-}
-
-function adminLista(){
-
-let a = document.getElementById("adminLista")
-
-if(!a) return
-
-a.innerHTML=""
-
-jogadores.forEach((j,i)=>{
-
-let div=document.createElement("div")
-div.className="player"
-
-div.innerHTML=`
-${j.nome}
-<button onclick="remover(${i})">❌</button>
-`
-
-a.appendChild(div)
-
-})
-
-}
-
-let clickAdmin=0
-
-function adminClick(){
-
-clickAdmin++
-
-if(clickAdmin>=5){
-
-let senha = prompt("Código admin")
-
-if(senha==="ph2011jesus"){
-
-document.getElementById("admin").style.display="block"
-
-}else{
-
-alert("Código errado")
-
-}
-
-clickAdmin=0
-
-}
-
-}
-
-atualizar()
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
