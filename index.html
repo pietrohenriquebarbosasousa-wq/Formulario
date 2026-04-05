@@ -12,8 +12,8 @@
 
 body{
 margin:0;
-font-family:Poppins;
 background:#0c0f1a;
+font-family:Poppins;
 color:white;
 }
 
@@ -25,7 +25,7 @@ padding:20px;
 
 .title{
 font-family:'Luckiest Guy';
-font-size:40px;
+font-size:42px;
 text-align:center;
 color:#ffd54a;
 text-shadow:0 0 15px orange;
@@ -33,8 +33,8 @@ text-shadow:0 0 15px orange;
 
 .subtitle{
 text-align:center;
-opacity:0.7;
-margin-bottom:25px;
+opacity:.7;
+margin-bottom:30px;
 }
 
 .card{
@@ -47,36 +47,29 @@ margin-bottom:20px;
 input{
 width:100%;
 padding:14px;
-margin-top:10px;
-margin-bottom:10px;
-border:none;
 border-radius:10px;
+border:none;
 background:#0f1322;
 color:white;
-font-size:16px;
+margin-top:10px;
+margin-bottom:10px;
 }
 
 button{
 width:100%;
-padding:15px;
+padding:14px;
 border:none;
-border-radius:12px;
+border-radius:10px;
+background:linear-gradient(90deg,#ff9800,#ffd54a);
 font-weight:600;
 cursor:pointer;
-background:linear-gradient(90deg,#ff9800,#ffd54a);
-color:black;
-font-size:16px;
-}
-
-button:hover{
-opacity:0.9;
 }
 
 .status{
 position:fixed;
 top:10px;
 right:10px;
-background:#0f1322;
+background:#12172b;
 padding:8px 15px;
 border-radius:20px;
 font-size:14px;
@@ -104,7 +97,7 @@ border-radius:10px;
 .first{
 background:linear-gradient(90deg,#ff9800,#ffd54a);
 color:black;
-font-weight:600;
+font-weight:700;
 }
 
 .notification{
@@ -121,14 +114,6 @@ display:none;
 display:none;
 }
 
-.pixkey{
-background:#0f1322;
-padding:15px;
-border-radius:10px;
-font-family:monospace;
-letter-spacing:3px;
-}
-
 .success{
 background:#1f3f2a;
 padding:15px;
@@ -141,6 +126,14 @@ background:#4a3b15;
 padding:15px;
 border-radius:10px;
 margin-bottom:20px;
+}
+
+.pixkey{
+background:#0f1322;
+padding:15px;
+border-radius:10px;
+font-family:monospace;
+letter-spacing:3px;
 }
 
 .lock{
@@ -159,14 +152,13 @@ display:none;
 <body>
 
 <div class="status">
-<span class="green"></span> Online
+<span class="green"></span> Conectado
 </div>
 
 <div class="container">
 
 <div class="title">🏆 DIARIO BRAWL FARM 🥇</div>
-<div class="subtitle">Campeonato diário • vagas limitadas</div>
-
+<div class="subtitle">campeonato diário • vagas limitadas</div>
 
 <div id="inscricao" class="card">
 
@@ -181,11 +173,11 @@ display:none;
 </div>
 
 
-<div id="ranking" class="card">
+<div class="card">
 
 <h2>Ranking</h2>
 
-<div id="listaRanking"></div>
+<div id="ranking"></div>
 
 </div>
 
@@ -210,7 +202,7 @@ Sua inscrição foi feita com sucesso!
 
 <h3>Chave Pix</h3>
 
-<div class="pixkey" id="pixkey">
+<div class="pixkey">
 98981980358
 </div>
 
@@ -221,8 +213,7 @@ Sua inscrição foi feita com sucesso!
 <br><br>
 
 <div id="linkSala" class="lock">
-🔒 Link da sala ainda não liberado <br>
-Aguarde o admin liberar o link da sala.
+🔒 Link da sala ainda não liberado
 </div>
 
 </div>
@@ -239,7 +230,7 @@ Aguarde o admin liberar o link da sala.
 
 <h2>Área do Admin</h2>
 
-<input id="senhaAdmin" placeholder="Senha admin">
+<input id="senhaAdmin" placeholder="Senha">
 
 <button onclick="loginAdmin()">Entrar</button>
 
@@ -247,13 +238,13 @@ Aguarde o admin liberar o link da sala.
 
 <h3>Valor da inscrição</h3>
 
-<input id="valorInput" placeholder="Ex: 5">
+<input id="valorInput">
 
 <button onclick="alterarValor()">Atualizar valor</button>
 
 <h3>Liberar link da sala</h3>
 
-<input id="linkInput" placeholder="Cole o link da sala">
+<input id="linkInput">
 
 <button onclick="liberarSala()">Liberar</button>
 
@@ -276,20 +267,6 @@ let valor = localStorage.getItem("valor")||5
 let linkSala = localStorage.getItem("linkSala")||""
 
 document.getElementById("valorPix").innerText="R$ "+valor+",00"
-
-if(localStorage.getItem("inscrito")){
-
-document.getElementById("inscricao").style.display="none"
-document.getElementById("pagamento").style.display="block"
-
-}
-
-if(linkSala){
-
-document.getElementById("linkSala").innerHTML=
-'🔓 Sala liberada<br><br><a href="'+linkSala+'" target="_blank"><button>Entrar na sala</button></a>'
-
-}
 
 function inscrever(){
 
@@ -317,9 +294,18 @@ jogadores.push(player)
 localStorage.setItem("jogadores",JSON.stringify(jogadores))
 localStorage.setItem("inscrito",true)
 
+mostrarPagamento()
+
 notificar("🎮 "+nick+" entrou no campeonato!")
 
-location.reload()
+atualizarRanking()
+
+}
+
+function mostrarPagamento(){
+
+document.getElementById("inscricao").style.display="none"
+document.getElementById("pagamento").style.display="block"
 
 }
 
@@ -332,7 +318,6 @@ let html=""
 jogadores.forEach((p,i)=>{
 
 let pos=i+1
-
 let classe="rank-item"
 
 if(pos==1) classe+=" first"
@@ -346,7 +331,7 @@ html+=`
 
 })
 
-document.getElementById("listaRanking").innerHTML=html
+document.getElementById("ranking").innerHTML=html
 
 }
 
@@ -411,7 +396,7 @@ let link=document.getElementById("linkInput").value
 
 localStorage.setItem("linkSala",link)
 
-alert("Sala liberada")
+alert("Link liberado")
 
 location.reload()
 
@@ -419,8 +404,7 @@ location.reload()
 
 function limpar(){
 
-localStorage.removeItem("jogadores")
-localStorage.removeItem("inscrito")
+localStorage.clear()
 
 alert("Lista limpa")
 
