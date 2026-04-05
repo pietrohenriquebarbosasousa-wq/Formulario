@@ -1,80 +1,22 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Diário Brawl Farm</title>
+<title>Brawl Farm Championship</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
 
 body{
 margin:0;
 font-family:Poppins;
-background:linear-gradient(180deg,#0c0d16,#141833);
+background:#070812;
 color:white;
 }
-
-/* loading */
-
-#loadingScreen{
-position:fixed;
-width:100%;
-height:100%;
-background:#0c0d16;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:9999;
-}
-
-.loadingBox{
-text-align:center;
-color:#ffd000;
-}
-
-.spinner{
-width:40px;
-height:40px;
-border:4px solid rgba(255,255,255,.1);
-border-top:4px solid orange;
-border-radius:50%;
-animation:spin 1s linear infinite;
-margin:auto;
-margin-bottom:15px;
-}
-
-@keyframes spin{
-0%{transform:rotate(0)}
-100%{transform:rotate(360deg)}
-}
-
-/* status */
-
-#statusOnline{
-position:fixed;
-top:15px;
-right:15px;
-background:#1b1f38;
-padding:6px 12px;
-border-radius:20px;
-font-size:12px;
-display:flex;
-align-items:center;
-gap:6px;
-}
-
-.dot{
-width:8px;
-height:8px;
-background:#00ff66;
-border-radius:50%;
-box-shadow:0 0 8px #00ff66;
-}
-
-/* layout */
 
 .container{
 max-width:900px;
@@ -83,62 +25,20 @@ padding:20px;
 }
 
 .title{
-font-family:'Luckiest Guy';
-font-size:40px;
 text-align:center;
-color:#ffd000;
-text-shadow:0 0 20px orange;
-}
-
-.subtitle{
-text-align:center;
-opacity:.6;
-margin-bottom:30px;
+font-size:38px;
+font-weight:700;
+color:#ffb300;
+text-shadow:0 0 20px #ff9900;
+margin-bottom:20px;
 }
 
 .card{
-background:#1b1f38;
+background:#0f1124;
+border-radius:16px;
 padding:20px;
-border-radius:15px;
 margin-bottom:20px;
-box-shadow:0 0 20px rgba(0,0,0,.5);
-}
-
-.stats{
-display:flex;
-gap:10px;
-}
-
-.stat{
-flex:1;
-background:#262b54;
-padding:15px;
-border-radius:10px;
-text-align:center;
-}
-
-.progressBar{
-height:12px;
-background:#2b2f63;
-border-radius:20px;
-margin-top:10px;
-overflow:hidden;
-}
-
-.progress{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,#ff7a00,#ffd000);
-transition:.5s;
-}
-
-.alert{
-background:#4a3a17;
-color:#ffd000;
-padding:10px;
-border-radius:10px;
-margin-top:10px;
-text-align:center;
+box-shadow:0 0 20px rgba(255,150,0,.2);
 }
 
 input{
@@ -146,57 +46,58 @@ width:100%;
 padding:12px;
 margin-top:10px;
 border:none;
-border-radius:8px;
-background:#2b2f63;
+border-radius:10px;
+background:#1a1c35;
 color:white;
 }
 
-.loginButton{
-margin-top:15px;
+button{
+margin-top:12px;
+padding:12px;
 width:100%;
-padding:14px;
 border:none;
-border-radius:15px;
+border-radius:10px;
+background:linear-gradient(90deg,#ff7b00,#ffd000);
 font-weight:600;
-background:linear-gradient(90deg,#ff7a00,#ffd000);
 cursor:pointer;
-box-shadow:0 0 20px orange;
+box-shadow:0 0 10px orange;
+}
+
+button:hover{
+transform:scale(1.02);
 }
 
 .player{
-background:#262b54;
-padding:12px;
-margin-top:8px;
-border-radius:10px;
 display:flex;
 justify-content:space-between;
+background:#1a1c35;
+padding:10px;
+border-radius:8px;
+margin-top:6px;
 }
 
-.rank{
-background:#262b54;
-padding:12px;
-margin-top:8px;
-border-radius:10px;
-display:flex;
-justify-content:space-between;
+.smallBtn{
+width:auto;
+padding:6px 10px;
+margin-left:6px;
 }
 
-.gold{border:2px solid gold;}
-.silver{border:2px solid silver;}
-.bronze{border:2px solid #cd7f32;}
-
-.adminButton{
-display:block;
-margin:25px auto;
-padding:12px 25px;
-border:none;
-border-radius:25px;
-background:#6c7194;
-color:white;
-cursor:pointer;
+.exit{
+position:fixed;
+bottom:20px;
+right:20px;
+background:red;
+box-shadow:0 0 15px red;
 }
 
-.adminPanel{
+.linkBox{
+margin-top:10px;
+padding:10px;
+background:#141631;
+border-radius:8px;
+}
+
+.admin{
 display:none;
 }
 
@@ -205,103 +106,63 @@ display:none;
 
 <body>
 
-<div id="loadingScreen">
-<div class="loadingBox">
-<div class="spinner"></div>
-<p>Conectando ao sistema...</p>
-</div>
-</div>
-
-<div id="statusOnline">
-<span class="dot"></span>Conectado
-</div>
-
 <div class="container">
 
-<div class="title">🏆 DIARIO BRAWL FARM 🥇</div>
-<div class="subtitle">campeonato farm diário • vagas limitadas</div>
+<div class="title">🏆 BRAWL FARM</div>
 
 <div class="card">
 
-<div class="stats">
+<h3>Inscrição</h3>
 
-<div class="stat">
-VAGAS
-<h2 id="vagas">9</h2>
-</div>
-
-<div class="stat">
-INSCRITOS
-<h2 id="inscritos">0</h2>
-</div>
-
-<div class="stat">
-RESTANTES
-<h2 id="restantes">9</h2>
-</div>
-
-</div>
-
-<div class="progressBar">
-<div class="progress" id="progress"></div>
-</div>
-
-<div id="alerta"></div>
-
-</div>
-
-<div class="card">
-
-<h3>➡ Entrar</h3>
-
-<p style="opacity:.6">
-Faça login para se inscrever no campeonato. Use seu nome e celular.
-</p>
-
-<label>SEU NOME COMPLETO</label>
 <input id="nome" placeholder="Ex: Pedro Oliveira">
 
-<label>SEU CELULAR (SÓ NÚMEROS)</label>
 <input id="celular" placeholder="Ex: 21987654321">
 
-<button class="loginButton" onclick="entrar()">➡ Entrar</button>
+<div id="brawlDiv" style="display:none">
+
+<input id="brawl" placeholder="Nome no Brawl Stars">
+
+<button onclick="confirmar()">Confirmar inscrição</button>
+
+</div>
 
 </div>
 
 <div class="card">
+
 <h3>Jogadores inscritos</h3>
+
 <div id="lista"></div>
+
 </div>
 
 <div class="card">
-<h3>Ranking — Jogadores mais ativos</h3>
-<div id="ranking"></div>
+
+<h3>Link da sala</h3>
+
+<div id="sala"></div>
+
 </div>
 
-<button class="adminButton" onclick="abrirAdmin()">⚙ Área do admin</button>
+<button onclick="abrirAdmin()">Área admin</button>
 
-<div class="card adminPanel" id="admin">
+<div class="card admin" id="adminPanel">
 
-<h3>🔑 Login admin</h3>
+<h3>Login admin</h3>
 
-<input id="senhaAdmin" placeholder="Digite a senha">
+<input id="senhaAdmin" placeholder="Senha">
 
-<button class="loginButton" onclick="loginAdmin()">Entrar como admin</button>
+<button onclick="loginAdmin()">Entrar</button>
 
 <div id="adminArea" style="display:none">
 
-<h3>Painel admin</h3>
+<h3>Configurar sala</h3>
 
-<label>Quantidade de vagas</label>
-<input id="novaVagas" type="number">
+<input id="linkSala" placeholder="Cole o link da sala">
 
-<button class="loginButton" onclick="alterarVagas()">Atualizar vagas</button>
+<button onclick="salvarLink()">Salvar link</button>
 
-<button class="loginButton" onclick="toggleInscricao()">Abrir / Fechar inscrições</button>
-
-<button class="loginButton" onclick="limpar()">Limpar lista</button>
-
-<button class="loginButton" onclick="resetRanking()">Resetar ranking</button>
+<h3>Jogadores</h3>
 
 <div id="adminLista"></div>
 
@@ -311,208 +172,158 @@ Faça login para se inscrever no campeonato. Use seu nome e celular.
 
 </div>
 
+<button class="exit" onclick="sair()">❌ Sair da partida</button>
+
 <script>
 
-setTimeout(()=>{
-document.getElementById("loadingScreen").style.display="none"
-},1800)
-
-let vagasTotal=localStorage.getItem("vagasTotal")||9
-let inscricoesAbertas=localStorage.getItem("inscricoes")||"true"
-
 let jogadores=JSON.parse(localStorage.getItem("jogadores"))||[]
-let ranking=JSON.parse(localStorage.getItem("ranking"))||{}
+let linkSala=localStorage.getItem("linkSala")||""
+
+document.getElementById("nome").addEventListener("input",checkCampos)
+document.getElementById("celular").addEventListener("input",checkCampos)
+
+function checkCampos(){
+
+let nome=document.getElementById("nome").value
+let cel=document.getElementById("celular").value
+
+if(nome.length>2 && cel.length>7){
+
+document.getElementById("brawlDiv").style.display="block"
+
+}
+
+}
+
+function confirmar(){
+
+if(localStorage.getItem("inscrito")){
+
+alert("Você já está inscrito")
+return
+
+}
+
+let nome=document.getElementById("nome").value
+let brawl=document.getElementById("brawl").value
+
+jogadores.push({
+nome,
+brawl,
+liberado:false
+})
+
+localStorage.setItem("inscrito","true")
+
+salvar()
+
+}
 
 function salvar(){
+
 localStorage.setItem("jogadores",JSON.stringify(jogadores))
-localStorage.setItem("ranking",JSON.stringify(ranking))
-localStorage.setItem("vagasTotal",vagasTotal)
-localStorage.setItem("inscricoes",inscricoesAbertas)
+
+render()
+
 }
 
-function atualizar(){
-
-let inscritos=jogadores.length
-let restantes=vagasTotal-inscritos
-
-document.getElementById("vagas").innerText=vagasTotal
-document.getElementById("inscritos").innerText=inscritos
-document.getElementById("restantes").innerText=restantes
-
-let percent=(inscritos/vagasTotal)*100
-document.getElementById("progress").style.width=percent+"%"
-
-let alerta=document.getElementById("alerta")
-
-if(restantes<=3 && restantes>0){
-alerta.innerHTML="<div class='alert'>⚠ Quase cheio — Restam "+restantes+" vagas</div>"
-}else{
-alerta.innerHTML=""
-}
+function render(){
 
 let lista=document.getElementById("lista")
+let adminLista=document.getElementById("adminLista")
+
 lista.innerHTML=""
+adminLista.innerHTML=""
 
 jogadores.forEach((j,i)=>{
+
 let div=document.createElement("div")
 div.className="player"
-div.innerHTML=`${i+1}º ${j.nome}`
+
+div.innerHTML=`
+${j.nome} (${j.brawl})
+`
+
+if(j.liberado && linkSala){
+
+div.innerHTML+=`<a href="${linkSala}" target="_blank">🔗 Entrar</a>`
+
+}
+
 lista.appendChild(div)
-})
 
-let r=document.getElementById("ranking")
-r.innerHTML=""
+let adminDiv=document.createElement("div")
+adminDiv.className="player"
 
-let sorted=Object.entries(ranking).sort((a,b)=>b[1]-a[1])
+adminDiv.innerHTML=`
+${j.nome}
 
-sorted.forEach((p,i)=>{
+<button class="smallBtn" onclick="liberar(${i})">Liberar</button>
+<button class="smallBtn" onclick="remover(${i})">Remover</button>
+`
 
-let medalha=""
-let classe="rank"
-
-if(i==0){medalha="🥇";classe+=" gold"}
-if(i==1){medalha="🥈";classe+=" silver"}
-if(i==2){medalha="🥉";classe+=" bronze"}
-
-let div=document.createElement("div")
-div.className=classe
-div.innerHTML=`${medalha} ${p[0]} <span>${p[1]} partidas</span>`
-
-r.appendChild(div)
+adminLista.appendChild(adminDiv)
 
 })
 
-adminLista()
-
 }
 
-function entrar(){
+function liberar(i){
 
-if(localStorage.getItem("jaInscrito")){
-alert("Você já se inscreveu")
-return
-}
-
-if(inscricoesAbertas!="true"){
-alert("Inscrições fechadas")
-return
-}
-
-let nome=document.getElementById("nome").value.trim()
-
-if(!nome){
-alert("Digite seu nome")
-return
-}
-
-let existe=jogadores.find(j=>j.nome.toLowerCase()===nome.toLowerCase())
-
-if(existe){
-alert("Esse nome já está inscrito")
-return
-}
-
-if(jogadores.length>=vagasTotal){
-alert("Sem vagas")
-return
-}
-
-jogadores.push({nome})
-
-ranking[nome]=(ranking[nome]||0)+1
-
-localStorage.setItem("jaInscrito","true")
+jogadores[i].liberado=true
 
 salvar()
-atualizar()
-
-}
-
-function abrirAdmin(){
-document.getElementById("admin").style.display="block"
-}
-
-function loginAdmin(){
-
-let senha=document.getElementById("senhaAdmin").value
-
-if(senha=="ph2011jesus"){
-document.getElementById("adminArea").style.display="block"
-}else{
-alert("Senha incorreta")
-}
-
-}
-
-function alterarVagas(){
-
-let v=document.getElementById("novaVagas").value
-
-if(v>0){
-vagasTotal=v
-salvar()
-atualizar()
-}
-
-}
-
-function toggleInscricao(){
-
-inscricoesAbertas=inscricoesAbertas=="true"?"false":"true"
-
-salvar()
-atualizar()
-
-}
-
-function limpar(){
-
-jogadores=[]
-localStorage.removeItem("jaInscrito")
-
-salvar()
-atualizar()
-
-}
-
-function resetRanking(){
-
-ranking={}
-salvar()
-atualizar()
-
-}
-
-function adminLista(){
-
-let a=document.getElementById("adminLista")
-if(!a)return
-
-a.innerHTML=""
-
-jogadores.forEach((j,i)=>{
-
-let div=document.createElement("div")
-div.className="player"
-div.innerHTML=`${j.nome} <button onclick="remover(${i})">❌</button>`
-
-a.appendChild(div)
-
-})
 
 }
 
 function remover(i){
 
 jogadores.splice(i,1)
+
 salvar()
-atualizar()
 
 }
 
-atualizar()
+function sair(){
+
+localStorage.removeItem("inscrito")
+
+alert("Você saiu da partida")
+
+location.reload()
+
+}
+
+function abrirAdmin(){
+
+document.getElementById("adminPanel").style.display="block"
+
+}
+
+function loginAdmin(){
+
+if(document.getElementById("senhaAdmin").value=="ph2011jesus"){
+
+document.getElementById("adminArea").style.display="block"
+
+}
+
+}
+
+function salvarLink(){
+
+linkSala=document.getElementById("linkSala").value
+
+localStorage.setItem("linkSala",linkSala)
+
+render()
+
+}
+
+render()
 
 </script>
 
 </body>
 </html>
+```
