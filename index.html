@@ -1236,42 +1236,7 @@ Inicialização do sistema (execução assíncrona)
 
     // Carrega config + participants do Supabase pro state em memória
    
-      async function loadStateFromSupabase() {
-  const { data: cfg, error: cfgErr } = await sb
-    .from('config_public')
-    .select('*')
-    .limit(1);
-
-  if (cfgErr) throw new Error('Erro ao carregar config: ' + cfgErr.message);
-
-  const config = cfg?.[0];
-
-  if (!config) {
-    throw new Error('Config não encontrada no banco');
-  }
-
-  state.maxSpots         = config.max_spots;
-  state.pixKey           = config.pix;
-  state.roomLink         = config.link;
-  state.inscriptionValue = config.valor;
-  state.linkReleased     = config.released;
-
-  const { data: parts, error: partsErr } = await sb
-    .from('participants')
-    .select('*')
-    .order('created_at', { ascending: true });
-
-  if (partsErr) throw new Error('Erro ao carregar inscritos: ' + partsErr.message);
-
-  state.participants = (parts || []).map(function (p) {
-    return {
-      nome: p.nome,
-      celular: p.celular,
-      nick: p.nick,
-      createdAt: p.created_at
-    };
-  });
-}
+     
 // ─────────────────────────────────────────────────────────────
 //  SUPABASE — Funções de dados (fetch + RPC)
 // ─────────────────────────────────────────────────────────────
