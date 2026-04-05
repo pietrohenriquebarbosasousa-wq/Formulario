@@ -1,29 +1,68 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Diário Brawl</title>
-  <style>
-    body {
-      background: orange;
-      color: white;
-      font-family: Arial;
-      text-align: center;
-    }
-    .box {
-      background: #111;
-      padding: 20px;
-      border-radius: 10px;
-      margin: 20px;
-    }
-    button {
-      background: green;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Diário Brawl</title>
+
+<style>
+body {
+  background: #0d0d0d;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+}
+
+h1 {
+  color: #ff9900;
+  text-shadow: 0 0 10px #ff9900;
+}
+
+.box {
+  background: #111;
+  padding: 20px;
+  border-radius: 15px;
+  margin: 20px;
+  box-shadow: 0 0 15px #ff9900;
+}
+
+input {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  background: #00ff88;
+  color: black;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 10px #00ff88;
+}
+
+table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #333;
+  padding: 10px;
+}
+
+th {
+  background: #222;
+}
+
+.admin {
+  display: none;
+}
+</style>
+
 </head>
 
 <body>
@@ -35,8 +74,79 @@
   <p>💀 Kill: R$3</p>
   <p>🏆 Vitória: R$10</p>
 
-  <button onclick="alert('Entrou!')">Participar</button>
+  <h3>Inscreva-se</h3>
+
+  <input type="text" id="telefone" placeholder="Número de telefone">
+  <br>
+  <input type="text" id="nick" placeholder="Nick do Brawl Stars">
+  <br>
+  <button onclick="inscrever()">Participar</button>
 </div>
+
+<div class="box">
+  <h3>👥 Inscritos</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Telefone</th>
+        <th>Nick</th>
+      </tr>
+    </thead>
+    <tbody id="tabela"></tbody>
+  </table>
+</div>
+
+<div class="box">
+  <h3>🔒 Área ADM</h3>
+  <input type="password" id="codigo" placeholder="Digite o código">
+  <button onclick="entrarADM()">Entrar</button>
+
+  <div id="painelADM" class="admin">
+    <h4>Painel do Admin</h4>
+    <button onclick="limpar()">Limpar inscritos</button>
+  </div>
+</div>
+
+<script>
+let lista = [];
+
+function inscrever() {
+  let tel = document.getElementById("telefone").value;
+  let nick = document.getElementById("nick").value;
+
+  if(tel === "" || nick === "") {
+    alert("Preencha tudo!");
+    return;
+  }
+
+  lista.push({tel, nick});
+  atualizar();
+}
+
+function atualizar() {
+  let tabela = document.getElementById("tabela");
+  tabela.innerHTML = "";
+
+  lista.forEach(p => {
+    tabela.innerHTML += `<tr><td>${p.tel}</td><td>${p.nick}</td></tr>`;
+  });
+}
+
+function entrarADM() {
+  let codigo = document.getElementById("codigo").value;
+
+  if(codigo === "ph2011jesus") {
+    document.getElementById("painelADM").style.display = "block";
+  } else {
+    alert("Código errado!");
+  }
+}
+
+function limpar() {
+  lista = [];
+  atualizar();
+}
+</script>
 
 </body>
 </html>
