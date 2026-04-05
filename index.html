@@ -17,7 +17,7 @@ background:linear-gradient(180deg,#0c0d16,#141833);
 color:white;
 }
 
-/* LOADING */
+/* loading */
 
 #loadingScreen{
 position:fixed;
@@ -30,6 +30,11 @@ justify-content:center;
 z-index:9999;
 }
 
+.loadingBox{
+text-align:center;
+color:#ffd000;
+}
+
 .spinner{
 width:40px;
 height:40px;
@@ -38,7 +43,7 @@ border-top:4px solid orange;
 border-radius:50%;
 animation:spin 1s linear infinite;
 margin:auto;
-margin-bottom:10px;
+margin-bottom:15px;
 }
 
 @keyframes spin{
@@ -46,7 +51,7 @@ margin-bottom:10px;
 100%{transform:rotate(360deg)}
 }
 
-/* STATUS */
+/* status */
 
 #statusOnline{
 position:fixed;
@@ -69,7 +74,7 @@ border-radius:50%;
 box-shadow:0 0 8px #00ff66;
 }
 
-/* LAYOUT */
+/* layout */
 
 .container{
 max-width:900px;
@@ -82,12 +87,13 @@ font-family:'Luckiest Guy';
 font-size:40px;
 text-align:center;
 color:#ffd000;
+text-shadow:0 0 20px orange;
 }
 
 .subtitle{
 text-align:center;
-opacity:.7;
-margin-bottom:25px;
+opacity:.6;
+margin-bottom:30px;
 }
 
 .card{
@@ -95,6 +101,7 @@ background:#1b1f38;
 padding:20px;
 border-radius:15px;
 margin-bottom:20px;
+box-shadow:0 0 20px rgba(0,0,0,.5);
 }
 
 .stats{
@@ -111,7 +118,7 @@ text-align:center;
 }
 
 .progressBar{
-height:10px;
+height:12px;
 background:#2b2f63;
 border-radius:20px;
 margin-top:10px;
@@ -123,6 +130,15 @@ height:100%;
 width:0%;
 background:linear-gradient(90deg,#ff7a00,#ffd000);
 transition:.5s;
+}
+
+.alert{
+background:#4a3a17;
+color:#ffd000;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+text-align:center;
 }
 
 input{
@@ -144,11 +160,12 @@ border-radius:15px;
 font-weight:600;
 background:linear-gradient(90deg,#ff7a00,#ffd000);
 cursor:pointer;
+box-shadow:0 0 20px orange;
 }
 
 .player{
 background:#262b54;
-padding:10px;
+padding:12px;
 margin-top:8px;
 border-radius:10px;
 display:flex;
@@ -157,7 +174,7 @@ justify-content:space-between;
 
 .rank{
 background:#262b54;
-padding:10px;
+padding:12px;
 margin-top:8px;
 border-radius:10px;
 display:flex;
@@ -170,10 +187,10 @@ justify-content:space-between;
 
 .adminButton{
 display:block;
-margin:20px auto;
-padding:10px 20px;
+margin:25px auto;
+padding:12px 25px;
 border:none;
-border-radius:20px;
+border-radius:25px;
 background:#6c7194;
 color:white;
 cursor:pointer;
@@ -189,7 +206,7 @@ display:none;
 <body>
 
 <div id="loadingScreen">
-<div>
+<div class="loadingBox">
 <div class="spinner"></div>
 <p>Conectando ao sistema...</p>
 </div>
@@ -201,7 +218,7 @@ display:none;
 
 <div class="container">
 
-<div class="title">🏆 DIARIO BRAWL FARM</div>
+<div class="title">🏆 DIARIO BRAWL FARM 🥇</div>
 <div class="subtitle">campeonato farm diário • vagas limitadas</div>
 
 <div class="card">
@@ -229,11 +246,17 @@ RESTANTES
 <div class="progress" id="progress"></div>
 </div>
 
+<div id="alerta"></div>
+
 </div>
 
 <div class="card">
 
-<h3>Entrar</h3>
+<h3>➡ Entrar</h3>
+
+<p style="opacity:.6">
+Faça login para se inscrever no campeonato. Use seu nome e celular.
+</p>
 
 <label>SEU NOME COMPLETO</label>
 <input id="nome" placeholder="Ex: Pedro Oliveira">
@@ -241,7 +264,7 @@ RESTANTES
 <label>SEU CELULAR (SÓ NÚMEROS)</label>
 <input id="celular" placeholder="Ex: 21987654321">
 
-<button class="loginButton" onclick="entrar()">Entrar</button>
+<button class="loginButton" onclick="entrar()">➡ Entrar</button>
 
 </div>
 
@@ -251,26 +274,36 @@ RESTANTES
 </div>
 
 <div class="card">
-<h3>Ranking</h3>
+<h3>Ranking — Jogadores mais ativos</h3>
 <div id="ranking"></div>
 </div>
 
-<button class="adminButton" onclick="abrirAdmin()">Área do admin</button>
+<button class="adminButton" onclick="abrirAdmin()">⚙ Área do admin</button>
 
 <div class="card adminPanel" id="admin">
 
-<input id="senhaAdmin" placeholder="Senha admin">
-<button class="loginButton" onclick="loginAdmin()">Entrar</button>
+<h3>🔑 Login admin</h3>
+
+<input id="senhaAdmin" placeholder="Digite a senha">
+
+<button class="loginButton" onclick="loginAdmin()">Entrar como admin</button>
 
 <div id="adminArea" style="display:none">
 
-<input id="novaVagas" type="number" placeholder="Nova quantidade de vagas">
+<h3>Painel admin</h3>
+
+<label>Quantidade de vagas</label>
+<input id="novaVagas" type="number">
 
 <button class="loginButton" onclick="alterarVagas()">Atualizar vagas</button>
 
 <button class="loginButton" onclick="toggleInscricao()">Abrir / Fechar inscrições</button>
 
 <button class="loginButton" onclick="limpar()">Limpar lista</button>
+
+<button class="loginButton" onclick="resetRanking()">Resetar ranking</button>
+
+<div id="adminLista"></div>
 
 </div>
 
@@ -306,7 +339,16 @@ document.getElementById("vagas").innerText=vagasTotal
 document.getElementById("inscritos").innerText=inscritos
 document.getElementById("restantes").innerText=restantes
 
-document.getElementById("progress").style.width=(inscritos/vagasTotal)*100+"%"
+let percent=(inscritos/vagasTotal)*100
+document.getElementById("progress").style.width=percent+"%"
+
+let alerta=document.getElementById("alerta")
+
+if(restantes<=3 && restantes>0){
+alerta.innerHTML="<div class='alert'>⚠ Quase cheio — Restam "+restantes+" vagas</div>"
+}else{
+alerta.innerHTML=""
+}
 
 let lista=document.getElementById("lista")
 lista.innerHTML=""
@@ -314,9 +356,33 @@ lista.innerHTML=""
 jogadores.forEach((j,i)=>{
 let div=document.createElement("div")
 div.className="player"
-div.innerText=(i+1)+"º "+j.nome
+div.innerHTML=`${i+1}º ${j.nome}`
 lista.appendChild(div)
 })
+
+let r=document.getElementById("ranking")
+r.innerHTML=""
+
+let sorted=Object.entries(ranking).sort((a,b)=>b[1]-a[1])
+
+sorted.forEach((p,i)=>{
+
+let medalha=""
+let classe="rank"
+
+if(i==0){medalha="🥇";classe+=" gold"}
+if(i==1){medalha="🥈";classe+=" silver"}
+if(i==2){medalha="🥉";classe+=" bronze"}
+
+let div=document.createElement("div")
+div.className=classe
+div.innerHTML=`${medalha} ${p[0]} <span>${p[1]} partidas</span>`
+
+r.appendChild(div)
+
+})
+
+adminLista()
 
 }
 
@@ -336,6 +402,13 @@ let nome=document.getElementById("nome").value.trim()
 
 if(!nome){
 alert("Digite seu nome")
+return
+}
+
+let existe=jogadores.find(j=>j.nome.toLowerCase()===nome.toLowerCase())
+
+if(existe){
+alert("Esse nome já está inscrito")
 return
 }
 
@@ -397,6 +470,41 @@ function limpar(){
 jogadores=[]
 localStorage.removeItem("jaInscrito")
 
+salvar()
+atualizar()
+
+}
+
+function resetRanking(){
+
+ranking={}
+salvar()
+atualizar()
+
+}
+
+function adminLista(){
+
+let a=document.getElementById("adminLista")
+if(!a)return
+
+a.innerHTML=""
+
+jogadores.forEach((j,i)=>{
+
+let div=document.createElement("div")
+div.className="player"
+div.innerHTML=`${j.nome} <button onclick="remover(${i})">❌</button>`
+
+a.appendChild(div)
+
+})
+
+}
+
+function remover(i){
+
+jogadores.splice(i,1)
 salvar()
 atualizar()
 
